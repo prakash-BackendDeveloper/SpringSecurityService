@@ -20,7 +20,7 @@ public class StudentController {
             )
     );
 
-    @GetMapping("/students")
+    @GetMapping("/admin/students")
     public List<Student> getStudents(){
         return students;
     }

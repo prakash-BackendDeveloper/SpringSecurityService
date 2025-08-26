@@ -30,7 +30,12 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(customer -> customer.disable());
-        http.authorizeHttpRequests(request -> request.anyRequest().authenticated());
+        http.authorizeHttpRequests(request -> request
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/user/**").hasAnyRole("ADMIN","USER")
+                .requestMatchers("/public/**").permitAll()
+                .anyRequest().authenticated());
+
 //        http.formLogin(Customizer.withDefaults());
         http.httpBasic(Customizer.withDefaults());
         http.sessionManagement((session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)));

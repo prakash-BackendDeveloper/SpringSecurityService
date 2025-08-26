@@ -20,5 +20,10 @@ public class HelloController {
     public CsrfToken getCsrfToken(HttpServletRequest request){
         return (CsrfToken) request.getAttribute("_csrf");
     }
+    @GetMapping("/public/demo")
+    public String demo(){
+        return "Public page demo code";
+    }
+
 
 }
