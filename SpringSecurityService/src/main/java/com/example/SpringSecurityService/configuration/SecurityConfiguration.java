@@ -1,7 +1,10 @@
 package com.example.SpringSecurityService.configuration;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -9,6 +12,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -18,6 +22,10 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
+
+    @Autowired
+    UserDetailsService userDetailsService;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(customer -> customer.disable());
@@ -29,34 +37,43 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public UserDetailsService userDetailsService(){
-
-        List<UserDetails> users=new ArrayList<>();
-
-        UserDetails user1=User.withDefaultPasswordEncoder()
-                .username("rohit")
-                .password("3000")
-                .roles("USER")
-                .build();
-
-        UserDetails user2=User.withDefaultPasswordEncoder()
-                .username("kohli")
-                .password("2000")
-                .roles("USER")
-                .build();
-
-        UserDetails user3=User.withDefaultPasswordEncoder()
-                .username("pant")
-                .password("1000")
-                .roles("USER")
-                .build();
-
-        users.add(user1);
-        users.add(user2);
-        users.add(user3);
-
-       // return new InMemoryUserDetailsManager(user1,user2,user3);
-
-        return new InMemoryUserDetailsManager(users);
+    public AuthenticationProvider authenticationProvider(){
+        DaoAuthenticationProvider provider=new DaoAuthenticationProvider();
+        provider.setPasswordEncoder(NoOpPasswordEncoder.getInstance());
+        provider.setUserDetailsService(userDetailsService);
+        return provider;
     }
+
+
+//    @Bean
+//    public UserDetailsService userDetailsService(){
+//
+//        List<UserDetails> users=new ArrayList<>();
+//
+//        UserDetails user1=User.withDefaultPasswordEncoder()
+//                .username("rohit")
+//                .password("3000")
+//                .roles("USER")
+//                .build();
+//
+//        UserDetails user2=User.withDefaultPasswordEncoder()
+//                .username("kohli")
+//                .password("2000")
+//                .roles("USER")
+//                .build();
+//
+//        UserDetails user3=User.withDefaultPasswordEncoder()
+//                .username("pant")
+//                .password("1000")
+//                .roles("USER")
+//                .build();
+//
+//        users.add(user1);
+//        users.add(user2);
+//        users.add(user3);
+//
+//       // return new InMemoryUserDetailsManager(user1,user2,user3);
+//
+//        return new InMemoryUserDetailsManager(users);
+//    }
 }
