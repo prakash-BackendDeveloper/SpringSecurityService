@@ -18,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,19 +30,23 @@ public class SecurityConfiguration {
     @Autowired
     UserDetailsService userDetailsService;
 
+    @Autowired
+    private  JwtFilter jwtFilter;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(customer -> customer.disable());
         http.authorizeHttpRequests(request -> request
-                .requestMatchers("/admin/**").hasRole("ADMIN")
-                .requestMatchers("/user/**").hasAnyRole("ADMIN","USER")
-                .requestMatchers("/public/**").permitAll()
-                .requestMatchers("login", "register").permitAll()
+//                .requestMatchers("/admin/**").hasRole("ADMIN")
+//                .requestMatchers("/user/**").hasAnyRole("ADMIN","USER")
+//                .requestMatchers("/public/**").permitAll()
+                .requestMatchers("/login", "/register").permitAll()
                 .anyRequest().authenticated());
 
 //        http.formLogin(Customizer.withDefaults());
         http.httpBasic(Customizer.withDefaults());
         http.sessionManagement((session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)));
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
