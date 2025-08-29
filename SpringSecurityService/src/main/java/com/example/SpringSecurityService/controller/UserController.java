@@ -1,6 +1,7 @@
 package com.example.SpringSecurityService.controller;
 
 
+import com.example.SpringSecurityService.model.LoginUser;
 import com.example.SpringSecurityService.model.Users;
 import com.example.SpringSecurityService.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,4 +21,14 @@ public class UserController {
 
     }
 
+    @PostMapping("/register")
+    public LoginUser register(@RequestBody LoginUser user){
+        return  userService.register(user);
+    }
+
+
+    @PostMapping("/login")
+    public String login(@RequestBody LoginUser user){
+        return userService.verify(user);
+    }
 }

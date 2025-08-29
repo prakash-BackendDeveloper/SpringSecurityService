@@ -1,8 +1,11 @@
 package com.example.SpringSecurityService.controller;
 
+import com.example.SpringSecurityService.model.Users;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -24,6 +27,8 @@ public class HelloController {
     public String demo(){
         return "Public page demo code";
     }
+
+
 
 
 }

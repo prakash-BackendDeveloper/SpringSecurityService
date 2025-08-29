@@ -29,5 +29,4 @@ public class StudentController {
     public void addStudent(@RequestBody Student student){
         students.add(student);
     }
-
 }
